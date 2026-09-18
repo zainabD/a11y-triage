@@ -144,6 +144,20 @@ def test_skip_link_present_passes():
 def test_missing_skip_link_reported_when_nav_exists():
     assert len(checks.check_skip_link(soup("<nav><a href=/a>A</a></nav><main></main>"))) == 1
 
+# --- 1.3.1 tables -------------------------------------------------------------
+
+def test_data_table_headers_passes():
+    html = '<table><th></th></table>'
+    assert checks.check_data_table_headers(soup(html)) == []
+
+def test_data_table_headers_fires():
+    html = '<table><td></td></table>'
+    assert len(checks.check_data_table_headers(soup(html))) == 1
+
+def test_layout_table_with_role_presentation_passes():
+    assert checks.check_data_table_headers(
+        soup('<table role="presentation"><tr><td>x</td></tr></table>')) == []
+
 
 # --- ordering -------------------------------------------------------------
 

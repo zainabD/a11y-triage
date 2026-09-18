@@ -332,6 +332,31 @@ def check_skip_link(soup: BeautifulSoup) -> list[Finding]:
         )
     ]
 
+def check_data_table_headers(soup: BeautifulSoup) -> list[Finding]:
+    """1.3.1 - a data table needs th cells so rows and columns are announced."""
+    bad = []
+    for table in soup.find_all("table"):
+        if table.get("role") == "presentation":
+            continue          # explicitly a layout table, not data
+        if not table.find("th"):
+            bad.append(table)
+    if not bad:
+        return []
+    return [
+        Finding(
+            criterion=INFO_RELATIONSHIPS,
+            impact=Impact.SERIOUS,
+            message=(
+                f"{len(bad)} table(s) have no th cells. A screen reader "
+                "announces each cell with no row or column context, so the "
+                "data is readable but meaningless."
+            ),
+            snippet=_snippet(bad[0]),
+            count=len(bad),
+            tags=["tables", "structure"],
+        )
+    ]
+
 
 ALL_CHECKS = (
     check_inputs_have_labels,
@@ -344,6 +369,7 @@ ALL_CHECKS = (
     check_iframe_titles,
     check_positive_tabindex,
     check_skip_link,
+    check_data_table_headers,
 )
 
 
