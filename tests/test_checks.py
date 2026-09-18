@@ -158,6 +158,11 @@ def test_layout_table_with_role_presentation_passes():
     assert checks.check_data_table_headers(
         soup('<table role="presentation"><tr><td>x</td></tr></table>')) == []
 
+@pytest.mark.parametrize("role", ["presentation", "none"])
+def test_layout_table_passes(role):
+    html = f'<table role="{role}"><tr><td>x</td></tr></table>'
+    assert checks.check_data_table_headers(soup(html)) == []
+
 
 # --- ordering -------------------------------------------------------------
 

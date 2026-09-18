@@ -336,7 +336,7 @@ def check_data_table_headers(soup: BeautifulSoup) -> list[Finding]:
     """1.3.1 - a data table needs th cells so rows and columns are announced."""
     bad = []
     for table in soup.find_all("table"):
-        if table.get("role") == "presentation":
+        if table.get("role") in ("presentation", "none"):
             continue          # explicitly a layout table, not data
         if not table.find("th"):
             bad.append(table)
